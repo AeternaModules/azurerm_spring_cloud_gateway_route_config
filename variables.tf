@@ -47,5 +47,85 @@ EOT
       uri                    = optional(string)
     }))
   }))
+  validation {
+    condition = alltrue([
+      for k, v in var.spring_cloud_gateway_route_configs : (
+        v.filters == null || (length(v.filters) > 0)
+      )
+    ])
+    error_message = "must not be empty"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.spring_cloud_gateway_route_configs : (
+        v.predicates == null || (length(v.predicates) > 0)
+      )
+    ])
+    error_message = "must not be empty"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.spring_cloud_gateway_route_configs : (
+        v.route == null || (v.route.description == null || (length(v.route.description) > 0))
+      )
+    ])
+    error_message = "must not be empty"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.spring_cloud_gateway_route_configs : (
+        v.route == null || (v.route.filters == null || (length(v.route.filters) > 0))
+      )
+    ])
+    error_message = "must not be empty"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.spring_cloud_gateway_route_configs : (
+        v.route == null || (v.route.predicates == null || (length(v.route.predicates) > 0))
+      )
+    ])
+    error_message = "must not be empty"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.spring_cloud_gateway_route_configs : (
+        v.route == null || (v.route.title == null || (length(v.route.title) > 0))
+      )
+    ])
+    error_message = "must not be empty"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.spring_cloud_gateway_route_configs : (
+        v.route == null || (v.route.uri == null || (length(v.route.uri) > 0))
+      )
+    ])
+    error_message = "must not be empty"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.spring_cloud_gateway_route_configs : (
+        v.route == null || (v.route.classification_tags == null || (length(v.route.classification_tags) > 0))
+      )
+    ])
+    error_message = "must not be empty"
+  }
+  # --- Unconfirmed validation candidates, derived from azurerm_spring_cloud_gateway_route_config's provider source ---
+  # Not auto-enabled: either a bespoke provider validator we can't safely translate,
+  # or a path that crosses a list-typed block (needs its own for_each wrapping).
+  # Review, translate into a real validation{} block above, and delete once confirmed.
+  # path: spring_cloud_gateway_id
+  #   source:    [from validate.SpringCloudGatewayID] !ok
+  # path: spring_cloud_gateway_id
+  #   source:    [from validate.SpringCloudGatewayID] err != nil
+  # path: open_api.uri
+  #   source:    validation.IsURLWithHTTPorHTTPS(...) - no translation rule yet, add one
+  # path: protocol
+  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: spring_cloud_app_id
+  #   source:    [from validate.SpringCloudAppID] !ok
+  # path: spring_cloud_app_id
+  #   source:    [from validate.SpringCloudAppID] err != nil
 }
 
