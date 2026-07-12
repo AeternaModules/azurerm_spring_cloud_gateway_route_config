@@ -1,3 +1,7 @@
+output "spring_cloud_gateway_route_configs_id" {
+  description = "Map of id values across all spring_cloud_gateway_route_configs, keyed the same as var.spring_cloud_gateway_route_configs"
+  value       = { for k, v in azurerm_spring_cloud_gateway_route_config.spring_cloud_gateway_route_configs : k => v.id }
+}
 output "spring_cloud_gateway_route_configs_filters" {
   description = "Map of filters values across all spring_cloud_gateway_route_configs, keyed the same as var.spring_cloud_gateway_route_configs"
   value       = { for k, v in azurerm_spring_cloud_gateway_route_config.spring_cloud_gateway_route_configs : k => v.filters }
