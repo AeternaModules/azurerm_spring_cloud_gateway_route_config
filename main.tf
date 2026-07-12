@@ -17,7 +17,7 @@ resource "azurerm_spring_cloud_gateway_route_config" "spring_cloud_gateway_route
   }
 
   dynamic "route" {
-    for_each = each.value.route != null ? [each.value.route] : []
+    for_each = each.value.route != null ? each.value.route : []
     content {
       classification_tags    = route.value.classification_tags
       description            = route.value.description

@@ -35,7 +35,7 @@ EOT
     open_api = optional(object({
       uri = optional(string)
     }))
-    route = optional(object({
+    route = optional(list(object({
       classification_tags    = optional(set(string))
       description            = optional(string)
       filters                = optional(set(string))
@@ -45,72 +45,8 @@ EOT
       title                  = optional(string)
       token_relay            = optional(bool)
       uri                    = optional(string)
-    }))
+    })))
   }))
-  validation {
-    condition = alltrue([
-      for k, v in var.spring_cloud_gateway_route_configs : (
-        v.filters == null || (length(v.filters) > 0)
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.spring_cloud_gateway_route_configs : (
-        v.predicates == null || (length(v.predicates) > 0)
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.spring_cloud_gateway_route_configs : (
-        v.route == null || (v.route.description == null || (length(v.route.description) > 0))
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.spring_cloud_gateway_route_configs : (
-        v.route == null || (v.route.filters == null || (length(v.route.filters) > 0))
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.spring_cloud_gateway_route_configs : (
-        v.route == null || (v.route.predicates == null || (length(v.route.predicates) > 0))
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.spring_cloud_gateway_route_configs : (
-        v.route == null || (v.route.title == null || (length(v.route.title) > 0))
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.spring_cloud_gateway_route_configs : (
-        v.route == null || (v.route.uri == null || (length(v.route.uri) > 0))
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.spring_cloud_gateway_route_configs : (
-        v.route == null || (v.route.classification_tags == null || (length(v.route.classification_tags) > 0))
-      )
-    ])
-    error_message = "must not be empty"
-  }
   # --- Unconfirmed validation candidates, derived from azurerm_spring_cloud_gateway_route_config's provider source ---
   # Not auto-enabled: either a bespoke provider validator we can't safely translate,
   # or a path that crosses a list-typed block (needs its own for_each wrapping).
@@ -127,5 +63,29 @@ EOT
   #   source:    [from validate.SpringCloudAppID] !ok
   # path: spring_cloud_app_id
   #   source:    [from validate.SpringCloudAppID] err != nil
+  # path: filters[*]
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: predicates[*]
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: route.description
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: route.filters[*]
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: route.predicates[*]
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: route.title
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: route.uri
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: route.classification_tags[*]
+  #   condition: length(value) > 0
+  #   message:   must not be empty
 }
 
