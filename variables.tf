@@ -47,45 +47,70 @@ EOT
       uri                    = optional(string)
     })))
   }))
-  # --- Unconfirmed validation candidates, derived from azurerm_spring_cloud_gateway_route_config's provider source ---
-  # Not auto-enabled: either a bespoke provider validator we can't safely translate,
-  # or a path that crosses a list-typed block (needs its own for_each wrapping).
-  # Review, translate into a real validation{} block above, and delete once confirmed.
-  # path: spring_cloud_gateway_id
-  #   source:    [from validate.SpringCloudGatewayID] !ok
-  # path: spring_cloud_gateway_id
-  #   source:    [from validate.SpringCloudGatewayID] err != nil
-  # path: open_api.uri
-  #   source:    validation.IsURLWithHTTPorHTTPS(...) - no translation rule yet, add one
-  # path: protocol
-  #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
-  # path: spring_cloud_app_id
-  #   source:    [from validate.SpringCloudAppID] !ok
-  # path: spring_cloud_app_id
-  #   source:    [from validate.SpringCloudAppID] err != nil
-  # path: filters[*]
-  #   condition: length(value) > 0
-  #   message:   must not be empty
-  # path: predicates[*]
-  #   condition: length(value) > 0
-  #   message:   must not be empty
-  # path: route.description
-  #   condition: length(value) > 0
-  #   message:   must not be empty
-  # path: route.filters[*]
-  #   condition: length(value) > 0
-  #   message:   must not be empty
-  # path: route.predicates[*]
-  #   condition: length(value) > 0
-  #   message:   must not be empty
-  # path: route.title
-  #   condition: length(value) > 0
-  #   message:   must not be empty
-  # path: route.uri
-  #   condition: length(value) > 0
-  #   message:   must not be empty
-  # path: route.classification_tags[*]
-  #   condition: length(value) > 0
-  #   message:   must not be empty
+  validation {
+    condition = alltrue([
+      for k, v in var.spring_cloud_gateway_route_configs : (
+        v.filters == null || (alltrue([for x in v.filters : length(x) > 0]))
+      )
+    ])
+    error_message = "must not be empty"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.spring_cloud_gateway_route_configs : (
+        v.predicates == null || (alltrue([for x in v.predicates : length(x) > 0]))
+      )
+    ])
+    error_message = "must not be empty"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.spring_cloud_gateway_route_configs : (
+        v.route == null || alltrue([for item in v.route : (item.description == null || (length(item.description) > 0))])
+      )
+    ])
+    error_message = "must not be empty"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.spring_cloud_gateway_route_configs : (
+        v.route == null || alltrue([for item in v.route : (item.filters == null || (alltrue([for x in item.filters : length(x) > 0])))])
+      )
+    ])
+    error_message = "must not be empty"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.spring_cloud_gateway_route_configs : (
+        v.route == null || alltrue([for item in v.route : (item.predicates == null || (alltrue([for x in item.predicates : length(x) > 0])))])
+      )
+    ])
+    error_message = "must not be empty"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.spring_cloud_gateway_route_configs : (
+        v.route == null || alltrue([for item in v.route : (item.title == null || (length(item.title) > 0))])
+      )
+    ])
+    error_message = "must not be empty"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.spring_cloud_gateway_route_configs : (
+        v.route == null || alltrue([for item in v.route : (item.uri == null || (length(item.uri) > 0))])
+      )
+    ])
+    error_message = "must not be empty"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.spring_cloud_gateway_route_configs : (
+        v.route == null || alltrue([for item in v.route : (item.classification_tags == null || (alltrue([for x in item.classification_tags : length(x) > 0])))])
+      )
+    ])
+    error_message = "must not be empty"
+  }
+  # Note: 6 additional provider-side validators are enforced at apply time but not mirrored as validation{} blocks here (bespoke or non-mechanically-translatable).
 }
 
